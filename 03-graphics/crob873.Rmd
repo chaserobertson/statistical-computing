@@ -1,0 +1,156 @@
+---
+title: "STATS 782 Assignment 3; University of Auckland, Semester 1"
+date: 'Due Date: 23:59 NZ Time, Thursday 19 May 2022'
+output:
+  html_document: default
+  pdf_document: default
+---
+
+### Chase Robertson, crob873
+
+I have read the declaration on the cover sheet and confirm my agreement with it.
+
+[NOTE: figure sizes in this template are based on the model solution, but you can choose to change them if you use a different approach (except for 2e where you have to re-create it). However, you should make sure they are suitable for the plot you are drawing and thus are part of the solution.]: # (For your eyes only, destory this message after reading)
+
+## Question 1
+
+### a)
+
+```{r fig.width=7, fig.height=4}
+# compute x and y for full distribution
+x = seq(-4, 4, by=0.025)
+y = dt(x, 20)
+
+# extract x and y of rejection region
+rej_x = x[x >= 1.725]
+rej_y = tail(y, length(rej_x))
+
+# create plot
+plot.new()
+par(family='sans')
+plot.window(bty='n', yaxs='i',
+            xlim=c(-4, 4), ylim=c(0, 0.4))
+title(main='t(df=20) distribution',
+      xlab='test-statistic')
+
+# draw and fill distribution
+lines(x, y)
+polygon(x, y, border=NA, 
+        col=hcl(120, 50, alpha=0.5))
+
+# draw and fill rejection region
+lines(x=rep(1.725, 2), y=c(0, 0.4), lty='24')
+polygon(c(1.725, rej_x), c(0, rej_y), border=NA, 
+        col=hcl(270, 230))
+
+# add x axis and text
+axis(1)
+mtext('p = 0.05', side=3)
+text(2.8, 0.1, 'P(X > 1.725) = p')
+```
+
+### b)
+
+```{r}
+draw_rejections <- function(x, y, p, border, lower.tail) {
+  # draw and fill rejection region(s)
+  lines(x=rep(border, 2), y=c(0, 1), lty='24')
+  polygon(c(border, rej_x), c(0, rej_y), border=NA, 
+          col=hcl(270, 230))
+  text(border*1.75, p*1.5, paste0('P(X > ', border, ') = p'))
+}
+
+f <- function(df, p, onesided) {
+  # compute x and y for full distribution
+  xrange = round(qt(0.000125, df, lower.tail=F))
+  x = seq(-xrange, xrange, by=0.01)
+  y = dt(x, df)
+  
+  # create plot
+  plot.new()
+  par(family='sans')
+  plot.window(bty='n', yaxs='i',
+              xlim=c(-xrange, xrange), 
+              ylim=c(0, max(y)))
+  title(main=paste0('t(df=', df, ') distribution'),
+        xlab='test-statistic')
+  mtext(paste('p =', p), side=3)
+  axis(1)
+  
+  # draw and fill distribution
+  lines(x, y)
+  polygon(x, y, border=NA, col=hcl(120, 50, alpha=0.5))
+  
+  # draw and fill rejection regions
+  if (!onesided) {
+    p = p/2
+    border = round(qt(p, df), 3)
+    rej_x = x[x <= border]
+    rej_y = head(y, length(rej_x))
+    draw_rejections(rej_x, rej_y, p, border, T)
+  }
+  border = round(qt(p, df, lower.tail=F), 3)
+  rej_x = x[x >= border]
+  rej_y = tail(y, length(rej_x))
+  draw_rejections(rej_x, rej_y, p, border, F)
+}
+
+f(20, 0.05, F)
+f(10, 0.03, F)
+```
+
+```{r fig.width=7, fig.height=4}
+# f(20, 0.05, TRUE)
+# f(10, 0.03, FALSE)
+```
+
+
+### c)
+
+```{r}
+     
+```
+
+
+
+## Question 2
+
+### a)
+
+```{r}
+
+```
+
+### b)
+
+```{r fig.width=8, fig.height=6}
+    
+```
+
+Discuss..
+
+
+### c)
+
+
+```{r fig.width=7, fig.height=4}
+    
+```
+
+
+### d)
+
+```{r fig.width=9, fig.height=5.6}
+   
+```
+
+
+### e)
+
+```{r fig.width=8, fig.height=12}
+
+```
+
+### f)
+
+Answer here.
