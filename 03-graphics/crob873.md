@@ -1,21 +1,13 @@
----
-title: "STATS 782 Assignment 3; University of Auckland, Semester 1"
-date: 'Due Date: 23:59 NZ Time, Thursday 19 May 2022'
-output:
-  md_document: 
-    variant: markdown_github
-  pdf_document: default
----
-
 ### Chase Robertson, crob873
 
-I have read the declaration on the cover sheet and confirm my agreement with it.
+I have read the declaration on the cover sheet and confirm my agreement
+with it.
 
 ## Question 1
 
 ### a)
 
-```{r fig.width=7, fig.height=4}
+``` r
 # compute x and y for full distribution
 x = seq(-4, 4, by=0.025)
 y = dt(x, 20)
@@ -43,9 +35,11 @@ mtext('p = 0.05', side=3)
 text(2.8, 0.1, 'P(X > 1.725) = p')
 ```
 
+![](crob873_files/figure-markdown_github/unnamed-chunk-1-1.png)
+
 ### b)
 
-```{r}
+``` r
 # draw and fill a single rejection region
 draw_rejection <- function(x, y, p, border, onesided) {
   # dashed line at x
@@ -99,15 +93,21 @@ f <- function(df, p, onesided) {
 }
 ```
 
-```{r fig.width=7, fig.height=4}
+``` r
 f(20, 0.05, TRUE)
+```
+
+![](crob873_files/figure-markdown_github/unnamed-chunk-3-1.png)
+
+``` r
 f(10, 0.03, FALSE)
 ```
 
+![](crob873_files/figure-markdown_github/unnamed-chunk-3-2.png)
 
 ### c)
 
-```{r fig.width=8, fig.height=4}
+``` r
 # for reproducibility
 set.seed(400)
 
@@ -128,21 +128,35 @@ for (i in seq_along(tstats)) {
 }
 ```
 
-As illustrated above, $\mu = 2$ and $\mu = 4$ fall in the rejection region, indicating that the null hypothesis is rejected and the alternative is accepted given those mean values. The alternative hypothesis is not accepted for the other tested values of $\mu$.
+![](crob873_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
+As illustrated above, *μ* = 2 and *μ* = 4 fall in the rejection region,
+indicating that the null hypothesis is rejected and the alternative is
+accepted given those mean values. The alternative hypothesis is not
+accepted for the other tested values of *μ*.
 
 ## Question 2
 
 ### a)
 
-```{r}
+``` r
 # read csv and separate year from month
 imports <- read.csv('imports-by-country.csv')
 imports$year = imports$yearmonth %/% 100
 imports$month = as.integer(imports$yearmonth %% 100)
 imports = subset(imports, select=-c(yearmonth))
 head(imports)
+```
 
+    ##       country value year month
+    ## 1 Afghanistan 60538 2000     1
+    ## 2 Afghanistan 21641 2000     2
+    ## 3 Afghanistan 28603 2000     3
+    ## 4 Afghanistan 34781 2000     4
+    ## 5 Afghanistan  3130 2000     5
+    ## 6 Afghanistan 11199 2000     6
+
+``` r
 # list the top three countries by total value of imports
 country_sums <- aggregate(value ~ country, imports, sum)
 sorted_country_sums <- country_sums[order(-country_sums$value),]
@@ -150,23 +164,31 @@ top_three_countries <- head(sorted_country_sums, 3)
 top_three_countries
 ```
 
+    ##                         country        value
+    ## 43  China, People's Republic of 157224053406
+    ## 12                    Australia 153492831803
+    ## 233    United States of America 105147208043
+
 ### b)
 
-```{r fig.width=8, fig.height=6}
+``` r
 # draw a pie chart of total imports from each country
 with(sorted_country_sums, 
      pie(value, labels=country, main='Proportion of imports to NZ since 2000'))
 ```
 
-There are too many countries listed in this visualisation, so I would prefer to bin the smallest into an "other" group or narrow the range of countries listed.
+![](crob873_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
-The default colors used in this visualisation repeat, which may cause the viewer to wrongly associate unrelated countries.
+There are too many countries listed in this visualisation, so I would
+prefer to bin the smallest into an “other” group or narrow the range of
+countries listed.
 
+The default colors used in this visualisation repeat, which may cause
+the viewer to wrongly associate unrelated countries.
 
 ### c)
 
-
-```{r fig.width=7, fig.height=4}
+``` r
 # get top 15 countries by average annual imports
 annual_imports <- aggregate(value ~ country + year, imports, sum)
 avg_annual_imports <- aggregate(value ~ country, annual_imports, mean)
@@ -176,7 +198,26 @@ sorted_avg_imports <- avg_annual_imports[order(-avg_annual_imports$value),]
 sorted_avg_imports$value <- round(sorted_avg_imports$value / 10^9, 1)
 top_annual <- head(sorted_avg_imports, 15)
 top_annual
+```
 
+    ##                         country value
+    ## 43  China, People's Republic of   7.1
+    ## 12                    Australia   7.0
+    ## 233    United States of America   4.8
+    ## 110                       Japan   3.4
+    ## 85                      Germany   2.1
+    ## 115          Korea, Republic of   1.6
+    ## 192                   Singapore   1.5
+    ## 217                    Thailand   1.5
+    ## 130                    Malaysia   1.4
+    ## 231              United Kingdom   1.2
+    ## 230        United Arab Emirates   1.0
+    ## 77                       France   0.9
+    ## 108                       Italy   0.9
+    ## 214                      Taiwan   0.8
+    ## 103                   Indonesia   0.7
+
+``` r
 # remove 'republic of' from country names
 cnames <- sapply(strsplit(top_annual$country, ','), `[`, 1)
 
@@ -188,10 +229,11 @@ text(mybar, top_annual$value+0.4, top_annual$value)
 title(ylab='Avg Annual Imports (Billions NZD)', adj=1)
 ```
 
+![](crob873_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 ### d)
 
-```{r fig.width=9, fig.height=5.6}
+``` r
 # ---- DATA PROCESSING ----
 
 # get monthly imports of top 11 by avg annual imports
@@ -215,8 +257,23 @@ monthly <- monthly[order(monthly$time),]
 # convert monthly imports to billions and show sums to confirm
 monthly$value <- round(monthly$value / 10^9, 2)
 aggregate(value ~ country, monthly, sum)
+```
 
+    ##                        country  value
+    ## 1                    Australia 153.48
+    ## 2  China, People's Republic of 157.23
+    ## 3                      Germany  46.17
+    ## 4                        Japan  74.43
+    ## 5           Korea, Republic of  34.72
+    ## 6                     Malaysia  30.59
+    ## 7                        Other 251.72
+    ## 8                    Singapore  33.33
+    ## 9                     Thailand  32.37
+    ## 10        United Arab Emirates  21.12
+    ## 11              United Kingdom  26.91
+    ## 12    United States of America 105.07
 
+``` r
 # ---- PLOTTING ----
 
 # merge sorted country names to create palette
@@ -245,10 +302,11 @@ axis(2, at=seq(0, 2, by=0.4), las=2)
 legend('topleft', legend=countries, col=cols, lty=1, lwd=3, ncol=2)
 ```
 
+![](crob873_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 ### e)
 
-```{r fig.width=8, fig.height=12}
+``` r
 # drop 'Other' from countries
 m <- monthly[monthly$country!='Other',]
 co <- top_eleven$country
@@ -289,8 +347,16 @@ par(cex.main=2)
 title(main='Monthly Imports by Country (in billions NZD)', outer=T)
 ```
 
+![](crob873_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
 ### f)
 
-Based on the above figure, imports from Australia have a clear seasonal pattern. Each year consistently bottoms out in January and climbs to a peak in December, likely due to the timing of winter holidays around the New Year.
+Based on the above figure, imports from Australia have a clear seasonal
+pattern. Each year consistently bottoms out in January and climbs to a
+peak in December, likely due to the timing of winter holidays around the
+New Year.
 
-The above plots also illuminate steadily increasing imports from nations like China and Thailand. The warm hues of earlier years are consistently lower than the cooler hues of later years' lines, reflecting a steady increase in imports each year.
+The above plots also illuminate steadily increasing imports from nations
+like China and Thailand. The warm hues of earlier years are consistently
+lower than the cooler hues of later years’ lines, reflecting a steady
+increase in imports each year.
